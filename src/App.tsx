@@ -424,17 +424,34 @@ export default function App() {
   };
 
   const handleSetFinal = async (file: FileItem) => {
-    await fetch('/api/files/set-final', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: file.id, version_chain_id: file.version_chain_id })
-    });
-    fetchFiles();
+    try {
+      const res = await fetch('/api/files/set-final', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: file.id, version_chain_id: file.version_chain_id })
+      });
+      if (!res.ok) throw new Error('API failed');
+      fetchFiles();
+    } catch (error) {
+      console.warn('Backend unavailable, using local state update for Set Final');
+      setFiles(prevFiles => prevFiles.map(f => {
+        if (f.version_chain_id === file.version_chain_id) {
+          return { ...f, is_final: f.id === file.id ? 1 : 0 };
+        }
+        return f;
+      }));
+    }
   };
 
   const handleDelete = async (id: string) => {
-    await fetch(`/api/files/${id}`, { method: 'DELETE' });
-    fetchFiles();
+    try {
+      const res = await fetch(`/api/files/${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('API failed');
+      fetchFiles();
+    } catch (error) {
+      console.warn('Backend unavailable, using local state update for Delete');
+      setFiles(prevFiles => prevFiles.filter(f => f.id !== id));
+    }
   };
 
   const handleSearch = async () => {
