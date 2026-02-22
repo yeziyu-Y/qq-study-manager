@@ -396,6 +396,21 @@ export default function App() {
       setFiles(data);
     } catch (error) {
       console.error('Error fetching files:', error);
+      // Fallback mock data for Vercel/Preview environment where backend might not be available
+      const mockFiles: FileItem[] = [
+        { id: '1', name: '2026四级词汇大纲_校对版.pdf', group_name: '2025级本科生英语课通知群', version_chain_id: 'v1', is_final: 1, upload_date: '2025-10-10', content_snippet: '...', page_count: 12, weight: 1, sender: 'Teacher', priority: 'high' },
+        { id: '2', name: '四级作文万能模板汇总.pdf', group_name: '2025级本科生英语课通知群', version_chain_id: 'v2', is_final: 1, upload_date: '2025-10-12', content_snippet: '...', page_count: 5, weight: 1, sender: 'Teacher', priority: 'medium' },
+        { id: '3', name: '四级真题必刷题.pdf', group_name: '2025级本科生英语课通知群', version_chain_id: 'v3', is_final: 0, upload_date: '2025-10-15', content_snippet: '...', page_count: 20, weight: 1, sender: 'Student', priority: 'low' },
+        { id: '4', name: '宿舍卫生值日表.xlsx', group_name: '309宿舍小分队', version_chain_id: 'v4', is_final: 1, upload_date: '2025-09-01', content_snippet: '...', page_count: 1, weight: 1, sender: 'Roommate', priority: 'high' },
+        { id: '5', name: '周末聚餐菜单.docx', group_name: '309宿舍小分队', version_chain_id: 'v5', is_final: 0, upload_date: '2025-10-20', content_snippet: '...', page_count: 2, weight: 1, sender: 'Me', priority: 'low' }
+      ];
+      
+      const groupName = activeChat === 'english' ? '2025级本科生英语课通知群' : activeChat === 'dorm' ? '309宿舍小分队' : undefined;
+      if (groupName) {
+        setFiles(mockFiles.filter(f => f.group_name === groupName));
+      } else {
+        setFiles(mockFiles);
+      }
     } finally {
       setIsLoadingFiles(false);
     }
