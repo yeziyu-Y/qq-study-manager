@@ -578,27 +578,46 @@ export default function App() {
 
   const handleImportFromGroup = async (fileName: string) => {
     const currentGroupName = activeChat === 'english' ? '2025级本科生英语课通知群' : '309宿舍小分队';
-    const res = await fetch('/api/files', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: fileName,
-        group_name: currentGroupName,
-        page_count: fileName.includes('照片') ? 0 : Math.floor(Math.random() * 30) + 5,
-        content_snippet: `这是从群聊 "309宿舍小分队" 导入到 "${currentGroupName}" 的文件 "${fileName}" 的内容...`,
-        sender: fileName.includes('电费') || fileName.includes('照片') ? '张三' : '李盈盈',
-        priority: fileName.includes('真题') || fileName.includes('期末') ? '高优先级' : '中优先级'
-      })
-    });
+    const newFile: FileItem = {
+      id: Date.now().toString(),
+      name: fileName,
+      group_name: currentGroupName,
+      version_chain_id: fileName.split('.')[0].toLowerCase().replace(/\s+/g, '_'),
+      is_final: 0,
+      upload_date: new Date().toISOString().split('T')[0],
+      content_snippet: `这是从群聊 "309宿舍小分队" 导入到 "${currentGroupName}" 的文件 "${fileName}" 的内容...`,
+      page_count: fileName.includes('照片') ? 0 : Math.floor(Math.random() * 30) + 5,
+      weight: 10,
+      sender: fileName.includes('电费') || fileName.includes('照片') ? '张三' : '李盈盈',
+      priority: fileName.includes('真题') || fileName.includes('期末') ? '高优先级' : '中优先级'
+    };
 
-    if (res.ok) {
+    try {
+      const res = await fetch('/api/files', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: fileName,
+          group_name: currentGroupName,
+          page_count: newFile.page_count,
+          content_snippet: newFile.content_snippet,
+          sender: newFile.sender,
+          priority: newFile.priority
+        })
+      });
+
+      if (!res.ok) throw new Error('API failed');
       fetchFiles();
-      setShowImportModal(false);
-      setImportStep('choice');
-      setToastMessage(`已成功导入: ${fileName}`);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+    } catch (error) {
+      console.warn('Backend unavailable, using local state update for Import');
+      setFiles(prev => [newFile, ...prev]);
     }
+
+    setShowImportModal(false);
+    setImportStep('choice');
+    setToastMessage(`已成功导入: ${fileName}`);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   const mockGroupFiles = [
