@@ -1,0 +1,5 @@
+{
+  "name": "QQ 学习资料管家",
+  "description": "一个独立于 QQ 群文件的个人学习档案馆，支持多模态证据化检索、版本管理、优先复习及 AI 自动出题。",
+  "requestFramePermissions": []
+}
