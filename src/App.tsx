@@ -398,11 +398,18 @@ export default function App() {
       console.error('Error fetching files:', error);
       // Fallback mock data for Vercel/Preview environment where backend might not be available
       const mockFiles: FileItem[] = [
-        { id: '1', name: '2026四级词汇大纲_校对版.pdf', group_name: '2025级本科生英语课通知群', version_chain_id: 'v1', is_final: 1, upload_date: '2025-10-10', content_snippet: '...', page_count: 12, weight: 1, sender: 'Teacher', priority: 'high' },
-        { id: '2', name: '四级作文万能模板汇总.pdf', group_name: '2025级本科生英语课通知群', version_chain_id: 'v2', is_final: 1, upload_date: '2025-10-12', content_snippet: '...', page_count: 5, weight: 1, sender: 'Teacher', priority: 'medium' },
-        { id: '3', name: '四级真题必刷题.pdf', group_name: '2025级本科生英语课通知群', version_chain_id: 'v3', is_final: 0, upload_date: '2025-10-15', content_snippet: '...', page_count: 20, weight: 1, sender: 'Student', priority: 'low' },
-        { id: '4', name: '宿舍卫生值日表.xlsx', group_name: '309宿舍小分队', version_chain_id: 'v4', is_final: 1, upload_date: '2025-09-01', content_snippet: '...', page_count: 1, weight: 1, sender: 'Roommate', priority: 'high' },
-        { id: '5', name: '周末聚餐菜单.docx', group_name: '309宿舍小分队', version_chain_id: 'v5', is_final: 0, upload_date: '2025-10-20', content_snippet: '...', page_count: 2, weight: 1, sender: 'Me', priority: 'low' }
+        // English Group
+        { id: "f1", name: "2026四级词汇大纲_校对版.pdf", group_name: "2025级本科生英语课通知群", version_chain_id: "cet4_outline", is_final: 0, upload_date: "2024-02-21", content_snippet: "本大纲包含2026年四级考试核心词汇...", page_count: 52, weight: 100, sender: "李助教", priority: "高优先级" },
+        { id: "f2", name: "2026四级词汇大纲_初稿.pdf", group_name: "2025级本科生英语课通知群", version_chain_id: "cet4_outline", is_final: 0, upload_date: "2024-02-15", content_snippet: "初步整理的四级词汇...", page_count: 48, weight: 50, sender: "王老师", priority: "低优先级" },
+        { id: "f3", name: "四级作文万能模板汇总.pdf", group_name: "2025级本科生英语课通知群", version_chain_id: "cet4_writing", is_final: 1, upload_date: "2024-02-20", content_snippet: "开头段、中间段、结尾段万能句型...", page_count: 15, weight: 80, sender: "王老师", priority: "高优先级" },
+        { id: "f4", name: "四级听力高频词.pdf", group_name: "2025级本科生英语课通知群", version_chain_id: "cet4_listening", is_final: 1, upload_date: "2024-02-18", content_snippet: "听力场景词汇、同义替换词...", page_count: 22, weight: 90, sender: "李助教", priority: "中优先级" },
+        { id: "f5", name: "环境保护词汇思维导图.png", group_name: "2025级本科生英语课通知群", version_chain_id: "env_mindmap", is_final: 1, upload_date: "2024-02-21", content_snippet: "关于环境保护、污染、气候变化的思维导图...", page_count: 0, weight: 95, sender: "王老师", priority: "高优先级" },
+        
+        // Dorm Group
+        { id: "d1", name: "四级真题必刷题.pdf", group_name: "309宿舍小分队", version_chain_id: "dorm_cet4", is_final: 1, upload_date: "2024-02-21", content_snippet: "历年四级真题解析...", page_count: 120, weight: 100, sender: "李盈盈", priority: "高优先级" },
+        { id: "d2", name: "宿舍电费分摊_2025.pdf", group_name: "309宿舍小分队", version_chain_id: "dorm_elec", is_final: 1, upload_date: "2024-02-15", content_snippet: "2025年宿舍电费明细...", page_count: 2, weight: 50, sender: "张三", priority: "中优先级" },
+        { id: "d3", name: "期末考试划重点_计算机网络.pdf", group_name: "309宿舍小分队", version_chain_id: "dorm_net", is_final: 1, upload_date: "2024-02-20", content_snippet: "计算机网络期末复习重点...", page_count: 10, weight: 80, sender: "李盈盈", priority: "高优先级" },
+        { id: "d4", name: "宿舍照片合集.zip", group_name: "309宿舍小分队", version_chain_id: "dorm_photos", is_final: 0, upload_date: "2024-02-18", content_snippet: "宿舍聚餐及活动照片...", page_count: 0, weight: 30, sender: "张三", priority: "低优先级" }
       ];
       
       const groupName = activeChat === 'english' ? '2025级本科生英语课通知群' : activeChat === 'dorm' ? '309宿舍小分队' : undefined;
