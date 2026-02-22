@@ -1,60 +1,80 @@
-import { GoogleGenAI, Type } from "@google/genai";
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
+// Mock implementation for Gemini services
+// No API key required
 
 export async function searchFiles(query: string, files: any[]) {
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: `你是一个学习资料管家。基于以下文件列表和内容片段，回答用户的搜索请求 "${query}"。
-    如果找到匹配内容，请返回证据片段（约50字）和所在页码。
-    
-    文件列表:
-    ${JSON.stringify(files)}`,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            fileId: { type: Type.STRING },
-            fileName: { type: Type.STRING },
-            snippet: { type: Type.STRING },
-            pageNumber: { type: Type.INTEGER },
-            relevance: { type: Type.NUMBER }
-          },
-          required: ["fileId", "fileName", "snippet", "pageNumber"]
-        }
-      }
-    }
-  });
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
-  return JSON.parse(response.text || "[]");
+  console.log(`[Mock Search] Query: "${query}"`);
+
+  // Return static mock data based on query keywords or just generic results
+  if (query.includes("四级") || query.includes("英语")) {
+    return [
+      {
+        fileId: "1",
+        fileName: "2026四级词汇大纲_校对版.pdf",
+        snippet: "四级考试核心词汇包括... (此处为模拟搜索结果片段)",
+        pageNumber: 5,
+        relevance: 0.95
+      },
+      {
+        fileId: "2",
+        fileName: "四级作文万能模板汇总.pdf",
+        snippet: "作文模板第一段通常用于引出话题... (此处为模拟搜索结果片段)",
+        pageNumber: 2,
+        relevance: 0.88
+      }
+    ];
+  } else if (query.includes("宿舍") || query.includes("值日")) {
+    return [
+      {
+        fileId: "4",
+        fileName: "宿舍卫生值日表.xlsx",
+        snippet: "本周值日生安排如下... (此处为模拟搜索结果片段)",
+        pageNumber: 1,
+        relevance: 0.92
+      }
+    ];
+  }
+
+  // Default fallback
+  return [
+    {
+      fileId: "1",
+      fileName: "2026四级词汇大纲_校对版.pdf",
+      snippet: "相关内容片段... (模拟数据)",
+      pageNumber: 3,
+      relevance: 0.8
+    }
+  ];
 }
 
 export async function generateMicroTasks(fileContent: string, fileName: string) {
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: `基于文件 "${fileName}" 的内容: "${fileContent}"，生成3道复习题目。
-    题型包括选择、填空或判断。每道题必须注明源自哪一页（随机模拟一个页码）。`,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            question: { type: Type.STRING },
-            type: { type: Type.STRING, description: "choice, fill, or boolean" },
-            options: { type: Type.ARRAY, items: { type: Type.STRING }, description: "仅对选择题有效" },
-            answer: { type: Type.STRING },
-            evidencePage: { type: Type.INTEGER }
-          },
-          required: ["question", "type", "answer", "evidencePage"]
-        }
-      }
-    }
-  });
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 1500));
 
-  return JSON.parse(response.text || "[]");
+  console.log(`[Mock Tasks] Generating tasks for file: "${fileName}"`);
+
+  // Return static mock questions
+  return [
+    {
+      question: "根据文件内容，该文档的主要目的是什么？",
+      type: "choice",
+      options: ["提供复习资料", "通知考试时间", "安排值日表", "记录会议纪要"],
+      answer: "提供复习资料",
+      evidencePage: 1
+    },
+    {
+      question: "文中提到的核心概念是______。",
+      type: "fill",
+      answer: "词汇记忆",
+      evidencePage: 5
+    },
+    {
+      question: "该文件是否包含历年真题解析？",
+      type: "boolean",
+      answer: "是",
+      evidencePage: 12
+    }
+  ];
 }
